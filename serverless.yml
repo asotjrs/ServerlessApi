@@ -4,6 +4,12 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs14.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: 
+        - arn:aws:dynamodb:us-east-1:604270758518:table/TodoTable
 
 functions:
   addTodo:
@@ -11,6 +17,12 @@ functions:
     events:
       - httpApi:
           path: /
+          method: post
+  fetchTodos:
+    handler: src/fetchTodos.handler
+    events:
+      - httpApi:
+          path: /todos
           method: get
 
 

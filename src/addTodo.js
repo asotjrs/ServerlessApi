@@ -1,9 +1,11 @@
 "use strict";
-const { v4} = require("uuid")
+const { v4 }  = require('uuid');
 const AWS = require("aws-sdk")
 const addTodo = async (event) => {
 
-  const dynamoDb= AWS.DynamoDB.DocumentClient()
+  const dynamoDb= new AWS.DynamoDB.DocumentClient()
+
+  console.log("this is the todo from the event object", event.body)
   
   const {todo}=event.body
   const createdAt = new Date()
@@ -15,11 +17,17 @@ const addTodo = async (event) => {
     createdAt,
   
   }
+ try {
+   
   await dynamoDb.put({
     TableName:"TodoTable",
     Item: newTodo
-  })
+  }).promise()
 
+
+ } catch (error) {
+   console.log(error)
+ }
   return {
     statusCode: 200,
     body: JSON.stringify(
